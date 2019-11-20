@@ -14,7 +14,7 @@ import pydot
 Utility Functions 
 '''
 def toGraph(g):
-    G = nx.Graph()
+    G = nx.DiGraph()
     for n in g:
         for n2 in g[n]:
             G.add_edge(n,n2)
