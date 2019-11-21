@@ -14,6 +14,19 @@ def newArrowGraph(n):
 
 	return G
 
+def newDirectedGrid(n):
+	G = nx.DiGraph()
+
+	for i in range(0, n):
+		for j in range(1, n+1):
+
+			if(j < n):
+				G.add_edge((i*n)+j, (i*n)+j+1)
+			if(i < n-1):
+				G.add_edge((i*n)+j, ((i+1)*n)+j)
+
+	return G
+
 def createlasso():
     G = toGraph({
     'A': ['B', 'E'],
@@ -137,14 +150,14 @@ def compareRanking(dic1, dic2):
 				break
 	return distance
 
-G = newArrowGraph(5)
+G = newDirectedGrid(2)
 
 hits = hits(G, 100)
 pagerank = pageRank(G, 100, 0.85)
 indegree = indegree(G)
 
-print(rankDictionary(hits))
-print(rankDictionary(pagerank))
+#print(rankDictionary(hits))
+#print(rankDictionary(pagerank))
 #print(rankDictionary(indegree))
 
 print("distance: "+str(compareRanking(rankDictionary(hits), rankDictionary(pagerank))))
