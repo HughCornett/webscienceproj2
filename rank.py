@@ -14,16 +14,33 @@ def newArrowGraph(n):
 
 	return G
 
+def createlasso():
+    G = toGraph({
+    'A': ['B', 'E'],
+    'B': ['A','C'],
+    'C': ['B','D'],
+    'D': ['C','E'],
+    'E': ['A', 'D','F'],
+    'F': ['G']
+    })
+    return G
+
+def createInwardStar():
+    G = nx.DiGraph()
+    for i in range(6):
+        G.add_edge(str(i+1), 'A')
+    return G
+
 def indegree(G):
-	
+
 	#get the number of incoming edges each node has as a dict
 	nodeInEdges = dict()
 	for node in G:
 		nodeInEdges[node] = 0
-	
+
 	for edge in G.edges():
 		nodeInEdges[edge[1]] += 1
-	
+
 	return nodeInEdges
 
 def pageRank(G, k, B):
@@ -62,7 +79,7 @@ def pageRank(G, k, B):
 			newpagerank[node] += float(1-B)/len(G)
 
 		pagerank = newpagerank
-		
+
 
 	return newpagerank
 
@@ -131,5 +148,5 @@ print(rankDictionary(pagerank))
 #print(rankDictionary(indegree))
 
 print("distance: "+str(compareRanking(rankDictionary(hits), rankDictionary(pagerank))))
-	
+
 draw(G)

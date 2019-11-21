@@ -60,12 +60,10 @@ def pageRank(G, k, B):
 			newpagerank[node] += float(1-B)/len(G)
 
 		pagerank = newpagerank
-		
+
 
 	return newpagerank
 
-Ts = []
-Rs = []
 def getLimitT(G):
 	lastpagerank = pageRank(G, 0, 0.85)
 	lastT = round(lastpagerank['T'], 3)
@@ -80,23 +78,49 @@ def getLimitT(G):
 		thisT = round(pageRank(G, i, 0.85)['T'], 3)
 		if thisT == lastT:
 			print("limit T = "+str(lastT)+", R = "+str(lastR)+" (i = "+str(i-1)+")")
-			Ts.append(lastT)
-			Rs.append(lastR)
-			break
+			return lastT
 		#print("limit T = "+str(thispagerank['T'])+" (i = "+str(i-1)+")")
-		lastT = thisT	
+		lastT = thisT
 
-for i in range(0, 25):
-	G = newGraph(i+1, 5, 1)
-	print("f = "+str(i))
-	getLimitT(G)
-	
-G = newGraph(5, 5, 1)
 
-y1 = np.array(Ts)
-x1 = np.array(range(0, 25))
-plt.scatter(x1, y1)
+
+def experiment(r=50, f=10, n=10, p=10, variable = 'f'):
+	Ts = []
+	for i in range(0, r):
+		if variable == 'f':
+			G = newGraph(i+1, n, p)
+
+		elif variable == 'n':
+			G = newGraph(f, i+1, p)
+
+		elif variable == 'p':
+			G = newGraph(f, n, i+1)
+
+		else:
+			print("wrong variable. possible variables: 'f', 'n', 'p'")
+			break
+		print("{} = {}".format(variable, i))
+		Ts.append(getLimitT(G))
+
+	return Ts
+
+y = np.array(experiment(variable='f'))
+x = np.array(range(0,50))
+plt.subplot(321)
+plt.xlabel('number of supporting pages')
+plt.ylabel('target\'s PageRank')
+plt.scatter(x,y)
+
+y = np.array(experiment(variable='n'))
+plt.subplot(322)
+plt.xlabel('number of inaccessible pages')
+plt.ylabel('target\'s PageRank')
+plt.scatter(x,y)
+
+y = np.array(experiment(variable='p'))
+plt.subplot(323)
+plt.xlabel('number of accessible pages')
+plt.ylabel('target\'s PageRank')
+plt.scatter(x,y)
+
 plt.show()
-
-#draw(G)
-
