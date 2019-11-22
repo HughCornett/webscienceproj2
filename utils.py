@@ -132,46 +132,49 @@ def answer(b):
     else:
         return HTML("<h2 style='color: red;'>Incorrect</h2>")
 
-def shitPageRank(G, k, B):
+def pageRank(G, k, B):
 
-	#init the pagerank scores
-	pagerank = dict()
-	for node in G:
-		pagerank[node] = 1.0/len(G)
+    #init the pagerank scores
+    pagerank = dict()
+    nodeOutEdges = dict()
+    for node in G:
+        pagerank[node] = 1.0/len(G)
+        nodeOutEdges[node] = 0
+    #get the number of outgoing edges each node has as a dict
 
-	#get the number of outgoing edges each node has as a dict
-	nodeOutEdges = dict()
-	for edge in G.edges():
-		if edge[0] not in nodeOutEdges:
-			nodeOutEdges[edge[0]] = 0
-		nodeOutEdges[edge[0]] += 1
+    for edge in G.edges():
 
-	#if no iterations (or negative number given)
-	if k < 1:
-		return pagerank
+        nodeOutEdges[edge[0]] += 1
 
-	for i in range(k):
-		#init newpagerank with defaults as 0
-		newpagerank = dict()
-		for node in G:
-			newpagerank[node] = 0
 
-		for edge in G.edges():
-			if nodeOutEdges[edge[0]] > 0:
-				newpagerank[edge[1]] += (pagerank[edge[0]] / nodeOutEdges[edge[0]])
-			else:
-				newpagerank[edge[0]] += pagerank[edge[0]]
 
-		#scale all node scores by factor of B
-		for node in G:
-			newpagerank[node] *= B
-			newpagerank[node] += float(1-B)/len(G)
+    #if no iterations (or negative number given)
+    if k < 1:
 
-		pagerank = newpagerank
+        return pagerank
 
-	return newpagerank
+    for i in range(k):
+        #init newpagerank with defaults as 0
+        newpagerank = dict()
+        for node in G:
+            if nodeOutEdges[node] > 0:
+                newpagerank[node] = 0
+            else:
+                newpagerank[node] = pagerank[node]
 
-def shithits(G, k):
+        for edge in G.edges():
+            newpagerank[edge[1]] += (pagerank[edge[0]] / nodeOutEdges[edge[0]])
+
+        #scale all node scores by factor of B
+        for node in G:
+            newpagerank[node] *= B
+            newpagerank[node] += float(1-B)/len(G)
+
+        pagerank = newpagerank
+
+    return pagerank
+
+def hits(G, k):
     authorities = dict()
     hubs = dict()
     for n in G:

@@ -90,9 +90,6 @@ def indegree(G):
 	return nodeInEdges
 
 
-
-
-
 def rankDictionary(dictionary):
 	return sorted(dictionary.items(), key=operator.itemgetter(1), reverse=True)
 
@@ -105,35 +102,31 @@ def compareRanking(dic1, dic2):
 				break
 	return distance
 
-<<<<<<< HEAD
-G = newDirectedGrid(2)
 
-hits = nx.hits(G)
-pagerank = nx.pagerank(G, alpha = 0.85)
-indegree = indegree(G)
-
-#print(rankDictionary(hits))
-#print(rankDictionary(pagerank))
-#print(rankDictionary(indegree))
-
-print("distance: "+str(compareRanking(rankDictionary(hits), rankDictionary(pagerank))))
-
-
-draw(G)
-=======
 def testOnGraph(G):
 	hitsrank = hits(G, 100)
-	pagerank = pageRank(G, 100, 0.85)
+	pagerank = pageRank(G, 100 , 0.85)
 	indegreerank = indegree(G)
 
-	print("HITS: "+str(rankDictionary(hitsrank)))
-	print("PageRank: "+str(rankDictionary(pagerank)))
-	print("InDegree: "+str(rankDictionary(indegreerank)))
+	hitsordinal = rankDictionary(hitsrank)
+	pagerankordinal = rankDictionary(pagerank)
+	indegreeordinal = rankDictionary(indegreerank)
 
-	print("HITS - PageRank: "+str(compareRanking(rankDictionary(hitsrank), rankDictionary(pagerank))))
-	print("HITS - InDegree: "+str(compareRanking(rankDictionary(hitsrank), rankDictionary(indegreerank))))
-	print("PageRank - InDegree: "+str(compareRanking(rankDictionary(pagerank), rankDictionary(indegreerank))))
+	maxdist = getMaxDistance(len(G))
+	print("HITS: "+str(hitsordinal))
+	print("PageRank: "+str(pagerankordinal))
+	print("InDegree: "+str(indegreeordinal))
 
+	print("HITS - PageRank normalized distance: "+str(compareRanking(hitsordinal, pagerankordinal)/float(maxdist)))
+	print("HITS - InDegree normalized distance: "+str(compareRanking(hitsordinal, indegreeordinal)/float(maxdist)))
+	print("PageRank - InDegree normalized distance: "+str(compareRanking(pagerankordinal, indegreeordinal)/float(maxdist)))
+
+def getMaxDistance(nodes):
+	dist = 0
+	for n in range(nodes):
+		dist+=(abs(n+1 - (nodes-n)))
+
+	return dist
 
 print("============")
 print("grid graph")
@@ -153,7 +146,3 @@ testOnGraph(createflower())
 print("============")
 print("spam graph")
 testOnGraph(createSpam(3, 3, 1))
-
-G=createSpam(3,3,3)
-draw(G)
->>>>>>> 0536b009f4e49731f2084a4b1a22faa83434551a
