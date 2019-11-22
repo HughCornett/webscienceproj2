@@ -3,9 +3,11 @@ from IPython.display import display
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import *
-from graphs import *
 
 def newGraph(f, n, p):
+	'''
+	creates a spam farm with f supporting pages, n inaccessible pages and p accessiblepages
+	'''
 	G = nx.DiGraph()
 
 	for i in range(f):
@@ -30,21 +32,11 @@ def newGraph(f, n, p):
 
 
 
-def getTR(G):
-	pagerank = nx.pagerank(G, alpha=0.85)
-
-	T = round(pagerank['T'], 3)
-	R = 0
-	for v in pagerank.keys():
-		if v[0] == 'P':
-			R += pagerank[v]
-	R *= 0.85
-	print("limit T = {}, R = {}".format(T,R))
-
-	return (T,R)
-
 
 def getTR(G, steps):
+	'''
+	returns the target's page rank (T) and the external PageRank contribution towards T (R)
+	'''
 	lastpagerank = pageRank(G, steps, 0.85)
 
 	T = lastpagerank['T']
@@ -60,6 +52,9 @@ def getTR(G, steps):
 
 
 def experiment(r=50, f=10, n=10, p=10, variable = 'f'):
+	'''
+	ranks graphs where two out of the f, n and p stays the same and the other one increases from 0 to r
+	'''
 	Ts = []
 	Rs = []
 	for i in range(0, r):
@@ -81,6 +76,7 @@ def experiment(r=50, f=10, n=10, p=10, variable = 'f'):
 		Rs.append(TR[1])
 	return (Ts,Rs)
 
+#plotting the results
 results = experiment(variable='f')
 y = np.array(results[0])
 x = np.array(range(0,50))
